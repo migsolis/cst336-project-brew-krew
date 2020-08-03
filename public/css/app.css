@@ -1,0 +1,105 @@
+body {
+	background-color: #f0ece2;
+}
+
+.bc-footer {
+	background-color: #c7b198;
+	bottom: 0;
+	height: 125px;
+	padding-top: 24px;
+	width: 100vw;
+}
+
+.center-txt {
+	text-align: center;
+}
+
+.flex-admin {
+	display: flex;
+	flex-direction: row;
+}
+
+.flex-share {
+	flex-grow: 1;
+}
+
+.form-box {
+	background-color: white;
+	padding: 22px;
+	width: 60vw;
+}
+
+@media screen and (min-width: 600px) {
+	.form-box {
+		margin: 0 auto;
+		width: 400px;		
+	}
+}
+
+.form-box-admin {
+	background-color: white;
+	padding: 22px;
+	width: 700px;
+	margin: 0 auto;
+}
+
+.form-reports-admin {
+	border-left: 1px solid black;
+	width: 50%;
+	padding-left: 16px;
+}
+
+h1 {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+hr {
+	width: 50vw;
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: linear-gradient(to right, #ccc, #333, #ccc);
+	margin-bottom: 18px;
+}
+
+.header-nav-spacer {
+	font-size: 1.3em;
+	margin-right: 60px;
+}
+
+.left-msg {
+	color: #f0ece2;
+	font-size: 2.4em;
+	padding-top: 300px;
+	padding-left: 85px;
+}
+
+.login-box {
+	margin: 0 auto;
+	width: 70vw;
+}
+
+.navbar {
+  border: none;
+  box-shadow: none;
+}
+
+.nv-head {
+	background-color: #f0ece2;
+	height: 128px;
+	padding-top: 64px;
+}
+
+.nav-log {
+	margin-top: -40px;
+	padding-right: 64px;
+}
+
+.top-cont {
+	background-image: url("/img/enjoy_coffee.jpg");
+	background-repeat: no-repeat;
+	height: 800px;
+	opacity: 0.9;
+	width: 100vw;
+}

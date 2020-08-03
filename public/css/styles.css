@@ -1,0 +1,37 @@
+body {
+    background-color: #f0ece2;
+}
+
+.menu-category-card {
+    /*background-color: #f0ece2;*/
+    color: #623d12 !important;
+    min-width: 250px;
+    max-height: 82px;
+    border: 1px solid #623d12;
+}
+
+.menu-category-img {
+    width: 80px;
+    height: 80px;
+}
+
+.menu-item-card {
+    border: 1px solid #623d12;
+    max-width: 250px;
+}
+
+.menu-item-card h4 {
+    /*color: #47443d;*/
+}
+
+.menu-item-desc {
+    font-size: .8em;
+}
+
+.row {
+    margin: 0px;
+}
+
+.menu-card-order-section {
+    display: none;
+}

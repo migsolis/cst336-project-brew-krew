@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel='stylesheet' href='css/styles.css'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src='js/script.js'></script>
+    </head>
+    <body>
+        <a class='btn h4' href='/menu'>Menu</a>
+        <div class='d-flex flex-row flex-wrap justify-content-center bg-warning' id='menu-category-container'>
+            <div class='card d-flex flex-row menu-category-card m-3'>
+                <div class='card-body text-center m-auto'>
+                    <h4>Category</h4>
+                </div>
+                <img class='card-img menu-category-img' src='https://ipsumimage.appspot.com/80x80'>
+            </div>
+             <div class='card d-flex flex-row menu-category-card m-3'>
+                <div class='card-body text-center m-auto'>
+                    <h4>Category</h4>
+                </div>
+                <img class='card-img menu-category-img' src='https://ipsumimage.appspot.com/80x80'>
+            </div>
+            <div class='w-100'></div>
+            <div class='ml-5 mr-auto'><a class='btn btn-outline-secondary' href='#'>Show All</a></div>
+        </div>
+        <div class='d-flex flex-row flex-wrap justify-content-center p-3 bg-warning'>
+            
+            <!-- Item card -->
+            <div class='card menu-item-card d-flex flex-column text-center align-self-start m-3'>
+                <img class='card-img-top' src='https://ipsumimage.appspot.com/250x150'>
+                <div class='card-body'>
+                    <div class='card-title'><h4>Drink Name</h4></div>
+                    <div class='card-text text-left menu-item-desc'> 
+                        This is where the description of the drink goes. I don't know how long the description
+                        is going to be but hopefully it isn't too long and looks weird.
+                    </div>
+                    <button class='btn btn-outline-primary m-1 menu-order-btn'>ORDER</button>
+                    <!-- card order section -->
+                    <div class='pt-2 menu-card-order-section' action="/addToCart">
+                        <select class='custom-select w-75 m-1 p-2'>
+                            <option value='1'>small</option>
+                            <option value='2' selected>medium</option>
+                            <option value='3'>large</option>
+                        </select>
+                        <div class='input-group'>
+                            <div class='input-group-prepend'>
+                                <button class='btn btn-secondary font-weight-bold px-3 menu-itm-qty-minus'>-</button>
+                            </div>
+                            <input class='form-control text-center w-50 menu-itm-qty' type='number' min='0' value='1'>
+                            <div class='input-group-append'>
+                                <button class='btn btn-secondary font-weight-bold px-3 menu-itm-qty-plus'>+</button>
+                            </div>
+                        </div>
+                        <button type='submit' class='btn btn-success m-1 menu-itm-add-btn'>ADD TO CART</button>
+                    </div><!-- end of order section -->
+                    
+                </div>
+            </div><!-- end of card -->
+            
+            <!-- Item card -->
+            <div class='card menu-item-card d-flex flex-column text-center align-self-start m-3'>
+                <img class='card-img-top' src='https://ipsumimage.appspot.com/250x150'>
+                <div class='card-body'>
+                    <div class='card-title'><h4>Drink Name</h4></div>
+                    <div class='card-text text-left menu-item-desc'> 
+                        This is where the description of the drink goes. I don't know how long the description
+                        is going to be but hopefully it isn't too long and looks weird.
+                    </div>
+                    <button class='btn btn-primary m-1 menu-order-btn'>ORDER</button>
+                    <!-- card order section -->
+                    <div class='pt-2 menu-card-order-section'>
+                        <select class='custom-select w-75 m-1 p-2 menu-itm-size'>
+                            <option value='1'>small</option>
+                            <option value='2' selected>medium</option>
+                            <option value='3'>large</option>
+                        </select>
+                        <div class='input-group'>
+                            <div class='input-group-prepend'>
+                                <button class='btn btn-secondary font-weight-bold px-3 menu-itm-qty-minus'>-</button>
+                            </div>
+                            <input class='form-control text-center w-50 menu-itm-qty' type='number' min='0' value='1'>
+                            <div class='input-group-append'>
+                                <button class='btn btn-secondary font-weight-bold px-3 menu-itm-qty-plus'>+</button>
+                            </div>
+                        </div>
+                        <button type='button' class='btn btn-primary m-1 menu-itm-add-btn'>ADD TO CART</button>
+                    </div><!-- end of order section -->
+                    
+                </div>
+            </div><!-- end of card -->
+        </div>
+    </body>
+</html>

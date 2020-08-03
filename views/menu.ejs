@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>menu</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel='stylesheet' href='css/styles.css'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src='js/script.js'></script>
+    </head>
+    <body>
+        <h1 class='text-center'>MENU</h1>
+        <div class='d-flex flex-row flex-wrap justify-content-center' id='category-card-container'>
+            <% categoryArray.forEach((category, i) => { %>
+                    <a class='card d-flex flex-row text-decoration-none text-dark m-3 menu-category-card' href='#'>
+                        <div class='card-body text-center m-auto'>
+                            <h4 class='m-0 menu-category-desc'><%= category.description %></h4>
+                        </div>
+                        <img class='card-img menu-category-img' src='https://ipsumimage.appspot.com/80x80'>
+                    </a>
+            <% }); %>
+            <div class='w-100'></div>
+            <div class='ml-5 mr-auto'><a class='btn btn-secondary' href='#'>Show All</a></div>
+            
+        </div>
+        <div class='d-flex flex-row flex-wrap justify-content-center p-3' id='item-card-container'>
+            
+        </div>
+    </body>
+</html>
