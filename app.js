@@ -11,11 +11,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/menu', (req, res) => {
-    let sql = 'SELECT description FROM p_categories';
+    let sql = 'SELECT description FROM categories';
     pool.query(sql, (err, rows, fields) => {
-        if(err) throw err;
+        if(err) console.log(err);
         
-        // let categoryArray = ['Hot Coffee', 'Cold Coffee', 'Hot Tea', 'Cold Tea'];
+        // let categoryArray = [{description: 'Hot Coffee'}];
         let categoryArray = rows;
         res.render('menu', {'categoryArray': categoryArray});
     });
@@ -26,7 +26,7 @@ app.get('/api/getItems', (req, res) => {
     // let sql = 'SELECT * FROM items WHERE category = ?';
     // let sqlParams = [req.query.category];
     // pool.query(sql, sqlParams, (err, rows, fields) => {
-    //   if(err) throw err;
+    //   if(err) console.log(err)
     let rows = ['row1', 'row2', 'row3'];
       res.send(rows);
     // });

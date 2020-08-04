@@ -103,3 +103,137 @@ hr {
 	opacity: 0.9;
 	width: 100vw;
 }
+
+/*Menu styles*/
+.flex-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.menu-category-card {
+    display: flex;
+    flex-direction: row;
+    flex-basis: 250px;
+    max-height: 82px;
+    background-color: white;
+    color: #623d12 !important;
+    margin: 10px;
+    border: 1px solid #623d12;
+    border-radius: 7px;
+}
+
+.menu-category-card:link {
+	text-decoration: none;
+}
+
+.menu-category-card-body {
+	text-align: center;
+	margin: auto;
+}
+
+.menu-category-desc {
+    text-decoration: none;
+	margin: 0;
+}
+
+.menu-category-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 0 7px 7px 0;
+}
+.menu-show-all {
+	margin: 5px auto 5px 20px;
+}
+
+#item-card-container {
+	padding: 5px;
+}
+.menu-item-card {
+	display: flex;
+	flex-direction: column;
+	text-align:center;
+	align-self: flex-start;
+	margin: 30px;
+    max-width: 252px;
+    border: 1px solid #623d12;
+    border-radius: 7px;
+    background-color: white;
+}
+
+.menu-item-img {
+	width: 250px;
+	height: 150px;
+	border-bottom: 0;
+	border-radius: 7px 7px 0 0;
+}
+.menu-item-card-body {
+	flex-basis: 150px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+	height: 100%;
+}
+
+.menu-item-desc {
+	flex-grow: 1;
+	text-align: left;
+    font-size: .8em;
+    padding: 10px;
+}
+
+.menu-item-order-btn {
+	background-color: grey;
+	color: white;
+	align-self: center;
+	margin: 10px;
+	padding: 5px 10px;
+	border: 1px solid grey;
+	border-radius: 7px;
+}
+
+.menu-item-order-section {
+    display: none;
+    padding: 10px;
+}
+
+.item-size-select {
+	width: 75%;
+	margin: 5px;
+	padding: 7px;
+}
+
+.menu-item-qty{
+	width: 50%;
+	text-align: center;
+}
+
+.menu-item-qty-minus {
+	font-weight: bold;
+}
+
+.menu-item-qty-plus {
+	font-weight: bold;
+}
+
+.item-input-group {
+	display: flex;
+	flex-direction: row;
+	margin: 10px;
+	justify-content: center;
+}
+
+.item-input-group-prepend {
+	border-radius: 5px 0 5px 0;
+	border-right: 0 !important;
+}
+
+.item-input-group-append {
+	border-radius: 0 5px 0 5px;
+}
+
+.w-100 {
+	width: 100%;
+}
+/*End of Menu styles*/

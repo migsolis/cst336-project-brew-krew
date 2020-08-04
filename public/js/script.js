@@ -24,31 +24,31 @@ $(document).ready(() => {
                     
                     let htmlString = '';
                     
-                    htmlString += `<div class='card menu-item-card d-flex flex-column text-center align-self-start m-3'>
-                            <img class='card-img-top' src='${itemImg}'>
-                            <div class='card-body'>
-                                <div class='card-title'><h4>${itemName}</h4></div>
-                                <div class='card-text text-left menu-item-desc'> 
+                    htmlString += `<div class='menu-item-card'>
+                            <img class='menu-item-img' src='${itemImg}'>
+                            <div class='menu-item-card-body'>
+                                <div class='menu-item-title'><h4>${itemName}</h4></div>
+                                <div class='menu-item-desc'> 
                                     ${itemDesc}
                                 </div>
-                                <button class='btn btn-outline-primary m-1 menu-order-btn'>ORDER</button>
+                                <button class='menu-item-order-btn'>ORDER</button>
                                 <!-- card order section -->
-                                <div class='pt-2 menu-card-order-section' action="/addToCart">
-                                    <select class='custom-select w-75 m-1 p-2'>`;
-                                        // <option value='1'>small</option>
-                                        // <option value='2' selected>medium</option>
-                                        // <option value='3'>large</option>
+                                <div class='menu-item-order-section' action="/addToCart">
+                                    <select class='item-size-select'>
+                                        <option value='1' selected>small</option>
+                                        <option value='2'>medium</option>
+                                        <option value='3'>large</option>`;
                     htmlString +=   `</select>
-                                    <div class='input-group'>
-                                        <div class='input-group-prepend'>
-                                            <button class='btn btn-secondary font-weight-bold px-3 menu-itm-qty-minus'>-</button>
+                                    <div class='item-input-group'>
+                                        <div class='item-input-group-prepend'>
+                                            <button class='btn btn-default menu-item-qty-minus'>-</button>
                                         </div>
-                                        <input class='form-control text-center w-50 menu-itm-qty' type='number' min='0' value='1'>
-                                        <div class='input-group-append'>
-                                            <button class='btn btn-secondary font-weight-bold px-3 menu-itm-qty-plus'>+</button>
+                                        <input class='form-control menu-item-qty' type='number' min='0' value='1'>
+                                        <div class='item-input-group-append'>
+                                            <button class='btn btn-default menu-item-qty-plus'>+</button>
                                         </div>
                                     </div>
-                                    <button type='submit' class='btn btn-success m-1 menu-itm-add-btn'>ADD TO CART</button>
+                                    <button type='submit' class='btn btn-success menu-item-add-btn'>ADD TO CART</button>
                                 </div><!-- end of order section -->
                                 
                             </div>
@@ -62,37 +62,37 @@ $(document).ready(() => {
         });
     });
     
-    $('#item-card-container').on('click', '.menu-order-btn', (ev) => {
-        $('.menu-order-btn').show();
+    $('#item-card-container').on('click', '.menu-item-order-btn', (ev) => {
+        $('.menu-item-order-btn').show();
         $('.menu-item-desc').show();
-        $('.menu-card-order-section').hide();
+        $('.menu-item-order-section').hide();
         $(ev.currentTarget).hide();
         $(ev.currentTarget).prev('.menu-item-desc').hide();
-        $(ev.currentTarget).next('.menu-card-order-section').slideDown();
+        $(ev.currentTarget).next('.menu-item-order-section').slideDown();
     });
     
-    $('#item-card-container').on('click', '.menu-itm-qty-minus', (ev) => {
+    $('#item-card-container').on('click', '.menu-item-qty-minus', (ev) => {
         ev.preventDefault();
-        let qtyInput = $(ev.currentTarget).closest('.input-group').find('.menu-itm-qty');
+        let qtyInput = $(ev.currentTarget).closest('.item-input-group').find('.menu-item-qty');
         if(qtyInput.val() <= 0){return}
         let qty = Number(qtyInput.val()) - 1;
         qtyInput.val(qty);
     });
     
-    $('#item-card-container').on('click', '.menu-itm-qty-plus', (ev) => {
+    $('#item-card-container').on('click', '.menu-item-qty-plus', (ev) => {
         ev.preventDefault();
-        let qtyInput = $(ev.currentTarget).closest('.input-group').find('.menu-itm-qty');
+        let qtyInput = $(ev.currentTarget).closest('.item-input-group').find('.menu-item-qty');
         let qty = Number(qtyInput.val()) + 1;
         qtyInput.val(qty);
     });
     
-    $('#item-card-container').on('click', '.menu-itm-add-btn', (ev) => {
+    $('#item-card-container').on('click', '.menu-item-add-btn', (ev) => {
         ev.preventDefault();
-        $('.menu-order-btn').show();
+        $('.menu-item-order-btn').show();
         $('.menu-item-desc').show();
-        $('.menu-card-order-section').hide();
-        $(ev.currentTarget).siblings('.input-group').find('.menu-itm-qty').val(1);
-        $(ev.currentTarget).siblings('.custom-select').val(2);
+        $('.menu-item-order-section').hide();
+        $(ev.currentTarget).siblings('.item-input-group').find('.menu-item-qty').val(1);
+        $(ev.currentTarget).siblings('.item-size-select').val(1);
     });
     
     

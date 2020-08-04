@@ -2,14 +2,16 @@
 <html>
     <head>
         <title>Test</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">-->
+    	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link rel='stylesheet' href='css/styles.css'>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src='js/script.js'></script>
     </head>
     <body>
         <a class='btn h4' href='/menu'>Menu</a>
-        <div class='d-flex flex-row flex-wrap justify-content-center bg-warning' id='menu-category-container'>
+        <!--<div class='d-flex flex-row flex-wrap justify-content-center bg-warning' id='menu-category-container'>-->
+        <div class='flex-container' id='menu-category-container'>
             <div class='card d-flex flex-row menu-category-card m-3'>
                 <div class='card-body text-center m-auto'>
                     <h4>Category</h4>
@@ -22,6 +24,14 @@
                 </div>
                 <img class='card-img menu-category-img' src='https://ipsumimage.appspot.com/80x80'>
             </div>
+            
+            <a class='menu-category-card' href='#'>
+                <div class='menu-category-card-body'>
+                    <h3 class='menu-category-desc'>category</h3>
+                </div>
+                <img class='menu-category-img' src='https://ipsumimage.appspot.com/80x80'>
+            </a>
+            
             <div class='w-100'></div>
             <div class='ml-5 mr-auto'><a class='btn btn-outline-secondary' href='#'>Show All</a></div>
         </div>
