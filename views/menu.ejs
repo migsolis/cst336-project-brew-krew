@@ -1,18 +1,19 @@
 <%- include('partials/header.ejs') %>
-        <h1 class='text-center'>MENU</h1>
+        <h1 class='menu'>MENU</h1>
         <div class='flex-container' id='category-card-container'>
             <% categoryArray.forEach((category, i) => { %>
                     <a class='menu-category-card' href='#'>
                         <div class='menu-category-card-body'>
                             <h3 class='menu-category-desc'><%= category.description %></h3>
                         </div>
-                        <img class='menu-category-img' src='https://ipsumimage.appspot.com/80x80'>
+                        <!--<img class='menu-category-img' src='https://ipsumimage.appspot.com/80x80'>-->
                     </a>
             <% }); %>
             <div class='w-100'></div>
-            <div class='menu-show-all'><a class='btn' href='#'>Show All</a></div>
+            <div class='menu-show-all'><a class='btn btn-default' href='#'>Show All</a></div>
             
         </div>
+        <div class='displaySelectedCategory'></div>
         <div class='flex-container' id='item-card-container'>
             
         </div>

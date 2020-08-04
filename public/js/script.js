@@ -13,14 +13,14 @@ $(document).ready(() => {
             },
             success: (data, status) => {
                 console.log(data);
+                $('.displaySelectedCategory').html(data.displayedCategory);
+                $('#item-card-container').html('');
                 
-                // $('#item-card-container').html('');
-                
-                data.forEach( (row, i) => {
+                data.items.forEach( (item, i) => {
                     let itemImg = 'https://ipsumimage.appspot.com/250x150';
                     let itemName = 'Drink Name';
                     let itemDesc = 'Drink Description';
-                    console.log('forEach: ', row);
+                    console.log('forEach: ', item);
                     
                     let htmlString = '';
                     

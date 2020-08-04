@@ -24,11 +24,12 @@ app.get('/menu', (req, res) => {
 app.get('/api/getItems', (req, res) => {
     console.log('getItems: ', req.query);
     // let sql = 'SELECT * FROM items WHERE category = ?';
-    // let sqlParams = [req.query.category];
+    let displayedCategory = req.query.category;
+    // let sqlParams = [displayedCategory];
     // pool.query(sql, sqlParams, (err, rows, fields) => {
     //   if(err) console.log(err)
     let rows = ['row1', 'row2', 'row3'];
-      res.send(rows);
+      res.send({'displayedCategory': displayedCategory, 'items': rows});
     // });
 });
 
