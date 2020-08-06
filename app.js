@@ -27,16 +27,28 @@ app.get('/admin', (req, res) => {
    res.render('admin'); 
 });
 
+// Returns all the items for a category
 app.get('/api/getItems', (req, res) => {
-    let sql = 'select distinct item_id, item, item_details, item_img, item_price from menu_items where category = ?';
-    let displayedCategory = req.query.category;
-    let sqlParams = [displayedCategory];
+    let sql ='';
+    let sqlParams = [];
+    let displayedCategory ='';
+    
+    if(req.query.category == 'all'){
+        sql = 'select distinct item_id, item, item_details, item_img, item_price from menu_items';
+        displayedCategory = 'All Items';
+    } else{
+        sql = 'select distinct item_id, item, item_details, item_img, item_price from menu_items where category = ?';
+        displayedCategory = req.query.category;
+        sqlParams = [displayedCategory];
+    }
+
     pool.query(sql, sqlParams, async (err, rows, fields) => {
       if(err) console.log(err);
       res.send({'displayedCategory': displayedCategory, 'items': rows});
     });
-});
+}); // api get items
 
+// returns the item-modifiers for an item
 app.get('/api/getItemMods', (req, res) => {
     let sql = 'select modifier_id, modifier, mod_price, price from menu_items where item_id = ?';
     let sqlParams = [req.query.item_id];
@@ -45,19 +57,26 @@ app.get('/api/getItemMods', (req, res) => {
         
         res.send(rows);
     });
-});
+}); // api get item mods
 
+// returns updated price when size or qty change in the order section of an item card.
 app.get('/api/update', (req, res) => {
     console.log("Update: ", req.query.action, );
-    if(req.query.action == 'update'){
-        let sql = 'select price from menu_items where item_id = ? and modifier_id = ?';
-        let sqlParams = [req.query.item_id, req.query.mod_id];
-        pool.query(sql, sqlParams, (err, rows, fields) => {
-            if(err) console.log(err);
-            res.send(rows);
-        });
+    switch(req.query.action){
+        case 'update':
+            let sql = 'select price from menu_items where item_id = ? and modifier_id = ?';
+            let sqlParams = [req.query.item_id, req.query.mod_id];
+            pool.query(sql, sqlParams, (err, rows, fields) => {
+                if(err) console.log(err);
+                let price = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(rows[0].price * req.query.qty);
+                res.send(price);
+            });
+            break;
+        case 'add':
+            
+            break;
     }
-});
+}); // api update
 
 app.post("/login", async function(req, res){ 
     let username = req.body.username;

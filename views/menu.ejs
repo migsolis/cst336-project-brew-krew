@@ -2,7 +2,7 @@
         <h1 class='menu'>MENU</h1>
         <div class='flex-container' id='category-card-container'>
             <% categoryArray.forEach((category, i) => { %>
-                    <a class='menu-category-card' href='#'>
+                    <a class='menu-category-card' href='#item-card-container'>
                         <div class='menu-category-card-body'>
                             <span class='menu-category-desc'><%= category.description %></span>
                         </div>
@@ -10,7 +10,7 @@
                     </a>
             <% }); %>
             <div class='w-100'></div>
-            <div class='menu-show-all'><a class='btn btn-default' href='#'>Show All</a></div>
+            <div class='menu-show-all'><a class='btn btn-default' href='#item-card-container'>Show All</a></div>
             
         </div>
         <div class='displaySelectedCategory'></div>
