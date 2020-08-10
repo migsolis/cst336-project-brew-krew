@@ -121,7 +121,9 @@ $(document).ready(() => {
                         let htmlString = '';
                         
                         htmlString += `<div class='menu-item-card'>
-                                <img class='menu-item-img' src='img/${item.img}'>
+                                <div class='menu-item-img-container'>
+                                    <img class='menu-item-img' src='img/${item.img}'>
+                                </div>
                                 <div class='menu-item-card-body'>
                                     <div class='menu-item-title'>${item.description}</div>
                                     <div class='menu-item-desc'>${item.description_details}</div>`;
