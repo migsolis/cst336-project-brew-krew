@@ -14,6 +14,13 @@
 					<br><br>
 					<button>Log In</button>
 				</form>
+				
+				<% if (typeof loginError != "undefined" && loginError) { %>
+				
+					<h4 class="error">Error: Password or user name is incorrect.</h4>
+				
+				<% }%>
+				
 			</div>
 
 		</section>

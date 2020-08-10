@@ -19,6 +19,11 @@ body {
 	flex-direction: row;
 }
 
+.flex-admin-col {
+	display: flex;
+	flex-direction: column;
+}
+
 .flex-share {
 	flex-grow: 1;
 }
@@ -115,13 +120,14 @@ hr {
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
+	align-items: center;
 }
 .menu-category-card {
     display: flex;
     flex-direction: row;
     flex-basis: 250px;
-    height: 80px;
-    max-height: 82px;
+    min-height: 50px;
+    /*max-height: 80px;*/
     background-color: white;
     color: #623d12 !important;
     margin: 10px;
@@ -154,12 +160,21 @@ hr {
 	margin: 5px auto 5px 20px;
 }
 
+.show-all-btn{
+	margin: 5px auto 5px 20px;
+}
+
 .displaySelectedCategory {
 	font-size: 2em;
 	font-weight: bold;
 	text-align: center;
 	margin: auto;
 	padding-top: 10px;
+}
+
+.filter-section {
+	text-align: right;
+	margin: 0 100px;
 }
 
 #item-card-container {
@@ -202,6 +217,11 @@ hr {
 	text-align: left;
     font-size: .9em;
     padding: 10px;
+}
+
+.menu-item-unavailable {
+	color: red;
+	font-weight: bold;
 }
 
 .menu-item-order-btn {

@@ -8,10 +8,17 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 
+app.use(session({
+    secret: "aBc1@3deF$",
+    resave: true,
+    saveUninitialized: true
+}));
+
 //routes
 app.get('/', (req, res) => {
     res.render('index');
 });
+
 
 app.get('/menu', (req, res) => {
     let sql = 'select description from categories';
@@ -23,34 +30,47 @@ app.get('/menu', (req, res) => {
     });
 });
 
+app.get('/login', (req, res)=> {
+    res.render('login');
+});
+
 app.get('/admin', (req, res) => {
    res.render('admin'); 
 });
 
 // Returns all the items for a category
 app.get('/api/getItems', (req, res) => {
-    let sql ='';
+    console.log('Get Items: ',Object.keys(req.query).length, req.query.status, req.query.category);
+    let queryLength = Object.keys(req.query);
+    let category = req.query.category;
+    let status = req.query.status;
     let sqlParams = [];
-    let displayedCategory ='';
     
-    if(req.query.category == 'all'){
-        sql = 'select distinct item_id, item, item_details, item_img, item_price from menu_items';
-        displayedCategory = 'All Items';
-    } else{
-        sql = 'select distinct item_id, item, item_details, item_img, item_price from menu_items where category = ?';
-        displayedCategory = req.query.category;
-        sqlParams = [displayedCategory];
+    let sql = 'select item_id, category, items.description, img, description_details, price from items join categories on items.category = category_id';
+    
+    if(queryLength > 1 || category != 'All'){
+        sql += ' where ';
+    }
+    
+    if(category != undefined && category != 'All'){
+        console.log('category selected: ', category);
+        sql += ' categories.description = ?';
+        sqlParams[sqlParams.length] = category;
+    }
+    
+    if(status != undefined){
+        console.log('status: ', status);
     }
 
     pool.query(sql, sqlParams, async (err, rows, fields) => {
       if(err) console.log(err);
-      res.send({'displayedCategory': displayedCategory, 'items': rows});
+      res.send({'displayedCategory': category, 'items': rows});
     });
 }); // api get items
 
 // returns the item-modifiers for an item
 app.get('/api/getItemMods', (req, res) => {
-    let sql = 'select modifier_id, modifier, mod_price, price from menu_items where item_id = ?';
+    let sql = 'select * from modifiers join item_modifiers on modifiers.modifier_group = item_modifiers.modifier_group where item_modifiers.item = ?';
     let sqlParams = [req.query.item_id];
     pool.query(sql, sqlParams, (err, rows, fields) => {
         if(err) console.log(err);
@@ -78,12 +98,18 @@ app.get('/api/update', (req, res) => {
     }
 }); // api update
 
+app.get("/admin", isAuthenticated, function(req, res) {
+   res.render("admin"); 
+});
+
 app.post("/login", async function(req, res){ 
-    let username = req.body.username;
-    let password = req.body.password;
+    let username = req.body.uname;
+    let password = req.body.pword;
     
     let result = await checkUsername(username);
     let hashedPwd = "";
+    
+    console.log(username);
     
     if (result.length > 0) {
         hashedPwd = result[0].password;
@@ -91,6 +117,12 @@ app.post("/login", async function(req, res){
     
     let passwordMatch = await checkPassword(password, hashedPwd);
     
+    if (passwordMatch) {
+        req.session.authenticated = true;
+        res.render("admin");
+    } else {
+        res.render("login", {"loginError":true});
+    }
 }); // POST login form
 
 // functions
@@ -106,13 +138,22 @@ function checkUsername(username) {
 }
 
 function checkPassword(password, hashedVal) {
+    console.log(password + " : " + hashedVal);
     return new Promise(function(resolve, reject) {
-       bcrypt.compare(password, hashedVal, function(err, result){
+       bcrypt.compare(password, hashedVal, function(err, result) {
           if (err) throw err;
           resolve(result); 
        }); // bcrypt check
     }); // promise
 }
+
+function isAuthenticated(req, res, next) {
+    if (!req.session.authenticated) {
+        res.redirect('/login')
+    } else {
+        next();
+    }
+} // isAuthenticated
 
 //listener
 app.listen(process.env.PORT, process.env.IP, ()=> {

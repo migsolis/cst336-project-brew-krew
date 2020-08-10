@@ -6,12 +6,20 @@ $(document).ready(() => {
     // for the selected category.
     $('.menu-category-card').on('click', async (ev) => {
         let category = $(ev.currentTarget).find('.menu-category-desc').html().trim();
-        await generateItemCards(category);
+        await generateItemCards({'type': 2, 'category': category});
     }); // category card click event
     
     $('.menu-show-all').on('click', async (ev) => {
-        await generateItemCards('all');
-    })
+        await generateItemCards({'category': 'All'});
+    });
+    
+    $('.filter-form input').on('change', async (ev) => {
+        // console.log('Availability Selection: ', );
+        let category = $(ev.currentTarget).closest('.filter-section').siblings('.displaySelectedCategory').html().trim();
+        let availability = $(ev.currentTarget).val();
+        
+        await generateItemCards({'category': category, 'status': availability});
+    });
     
     // Adds size selection options to item order section
     $('#item-card-container').on('click', '.menu-item-order-btn', (ev) => {
@@ -30,18 +38,21 @@ $(document).ready(() => {
                 'item_id': id
             },
             success: (data, status) => {
-                let htmlString = '';
-                data.forEach((size, i) => {
-                    htmlString += `<option value='${size.modifier_id}'>${size.modifier}</option>`;
-                });
-                
-                $('.item-size-select').html(htmlString);
+                console.log(data);
+                if(data.length != 0){
+                    let htmlString = `<select class='item-mod-select'>`;
+                    data.forEach((mod, i) => {
+                        htmlString += `<option value='${mod.modifier_id}'>${mod.description}</option>`;
+                    });
+                    htmlString += `</select>`;
+                    $('.modifier-section').html(htmlString);
+                }
             }
         }); // size modifier ajax call
     }); // order button click event
     
     // updates price when size is selected
-    $('#item-card-container').on('change', '.item-size-select', async (ev) => {
+    $('#item-card-container').on('change', '.item-mod-select', async (ev) => {
         update('update', ev);
         let price = await update('update', ev);
         $(ev.currentTarget).closest('.menu-item-order-section').find('.menu-item-price').html(price);
@@ -87,36 +98,42 @@ $(document).ready(() => {
         $('.menu-item-desc').show();
         $('.menu-item-order-section').hide();
         $(ev.currentTarget).siblings('.item-input-group').find('.menu-item-qty').val(1);
-        $(ev.currentTarget).siblings('.item-size-select').val(1);
+        $(ev.currentTarget).siblings('.item-mod-select').val(1);
         update('add', ev);
     }); // add to cart click event
     
-    function generateItemCards(category){
+    function generateItemCards(data){
         return new Promise((resolve, reject) => {
             $.ajax({
                 method: 'get',
                 url: '/api/getItems',
                 data: {
-                    'category': category
+                    'category': data.category,
+                    'status': data.status
                 },
                 success: (data, status) => {
                     $('.displaySelectedCategory').html(data.displayedCategory);
                     $('#item-card-container').html('');
+                    console.log(data);
                     
                     data.items.forEach( (item, i) => {
-                        let price = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(item.item_price);
+                        let price = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(item.price);
                         let htmlString = '';
                         
                         htmlString += `<div class='menu-item-card'>
-                                <img class='menu-item-img' src='${item.item_img}'>
+                                <img class='menu-item-img' src='img/${item.img}'>
                                 <div class='menu-item-card-body'>
-                                    <div class='menu-item-title'>${item.item}</div>
-                                    <div class='menu-item-desc'>${item.item_details}</div>
-                                    <button class='menu-item-order-btn'>ORDER</button>
-                                    <!-- card order section -->
+                                    <div class='menu-item-title'>${item.description}</div>
+                                    <div class='menu-item-desc'>${item.description_details}</div>`;
+                        if(true){
+                            htmlString += `<button class='menu-item-order-btn'>ORDER</button>`;
+                        } else {
+                            htmlString += `<div class='menu-item-unavailable'>This Item is Unavailable</div>`
+                        }
+                        htmlString +=  `<!-- card order section -->
                                     <div class='menu-item-order-section' action="/addToCart">
-                                        <select class='item-size-select'></select>`;
-                      htmlString +=   `<div class='item-input-group'>
+                                        <div class='modifier-section'></div>
+                                        <div class='item-input-group'>
                                             <div class='item-input-group-prepend'><button class='btn btn-default menu-item-qty-minus'>-</button> </div>
                                             <input class='form-control menu-item-qty' type='number' min='1' value='1'>
                                             <div class='item-input-group-append'><button class='btn btn-default menu-item-qty-plus'>+</button></div>
@@ -138,7 +155,7 @@ $(document).ready(() => {
     function update(action, ev){
         return new Promise((resolve, reject) => {
             let item_id = $(ev.currentTarget).closest('.menu-item-order-section').find('.menu-item-id').val();
-            let mod_id = $(ev.currentTarget).closest('.menu-item-order-section').find('.item-size-select').val();
+            let mod_id = $(ev.currentTarget).closest('.menu-item-order-section').find('.item-mod-select').val();
             let qty = $(ev.currentTarget).closest('.menu-item-order-section').find('.menu-item-qty').val();
             
             $.ajax({

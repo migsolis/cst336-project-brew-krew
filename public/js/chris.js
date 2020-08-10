@@ -12,7 +12,7 @@ $(document).ready(function () {
 	}); // onChange selection ID
 	
 	$("#form-db-mod").submit(function(e) {
-        adminForm = new URLSearchParams(window.location.search
+        adminForm = new URLSearchParams(window.location.search);
         let price, stock;
         let sqlParams_s, sqlParams_p;
         let sql_p = "UPDATE items SET price = ? WHERE item_id = ?";
@@ -21,7 +21,7 @@ $(document).ready(function () {
 
         if(adminForm.getAll() === undefined || adminForm.getAll().length == 0) {
             // Change some text to tell the user that both fields remain empty
-            $("#mod-msg-info").html("Error! You need to supply a value to the stock or price form!")
+            $("#mod-msg-info").html("Error! You need to supply a value to the stock or price form!");
             $("#mod-msg-info").css("color","red");
         } else {
             if(adminForm.has('price')) {
