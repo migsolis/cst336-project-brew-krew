@@ -2,6 +2,18 @@ body {
 	background-color: #f0ece2;
 }
 
+a:link {
+	color: #596e79;
+}
+
+a:visited {
+	color: #596e79;	
+}
+
+a:hover {
+	color: #494949; 
+}
+
 .bc-footer {
 	background-color: #c7b198;
 	bottom: 0;
@@ -283,5 +295,11 @@ hr {
 
 .w-100 {
 	width: 100%;
+}
+
+.filter-form {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
 /*End of Menu styles*/

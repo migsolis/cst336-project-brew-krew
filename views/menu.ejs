@@ -6,7 +6,6 @@
                         <div class='menu-category-card-body'>
                             <span class='menu-category-desc'><%= category.description %></span>
                         </div>
-                        <!--<img class='menu-category-img' src='https://ipsumimage.appspot.com/80x80'>-->
                     </a>
             <% }); %>
             <div class='w-100'></div>
@@ -15,15 +14,30 @@
         </div>
         <div class='displaySelectedCategory'></div>
         <div class='filter-section'>
-            <form class='filter-form'>
-                <input type='radio' name='availability' id='all' value='undefined' checked>
-                <label for='all' selected>All</label>
-                <input type='radio' name='availability' id='available' value='1'>
-                <label for='available'>Available</label>
-                <input type='radio' name='availability' id='out' value='2'>
-                <label for='out'>Unvailable</label>
-            </form>
-
+            <div class='filter-form'>
+                <div class='item-search-filter'>
+                    <label for='item-search-text'>Search by description</label>
+                    <input type='text' name='item-search-text' id='item-search-text'>
+                    <input type='button' name='item-search-btn' id='item-search-btn' value='Search'>
+                </div>
+                <div class='item-category-filter'>
+                    <select class='menu-category-select' name='menu-category-select'>
+                        <option value='-1'>Filter by Category</option>
+                        <% categoryArray.forEach((category, i) => { %>
+                            <option value='<%= category.description %>'><%= category.description %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class='item-availability-filter'>
+                    <label for='availability'>Availability:</label>
+                    <input type='radio' name='availability' id='all' value='-1' checked>
+                    <label for='all' selected>All</label>
+                    <input type='radio' name='availability' id='available' value='1'>
+                    <label for='available'>Available</label>
+                    <input type='radio' name='availability' id='out' value='0'>
+                    <label for='out'>Unvailable</label>
+                </div>
+            </div>
         </div>
         <div class='flex-container' id='item-card-container'>
             

@@ -1,0 +1,35 @@
+<%- include('partials/header.ejs') %>
+
+		<section class="login-box">
+			<h2 class="center-txt">Control Panel</h2>
+			<hr>
+			<div class="form-box-admin flex-admin-col">
+				<div class="flex-share"><a href="cpanel"><- Go Back</a></div>
+				<div class="flex-admin">
+					<div class="flex-share" style="width: 50%;">
+						<h3>Delete item from database</h3>
+						<form id="form-db-mod">
+							Delete item by ID<br>
+							<input type="text" name="del-item" id="del-item" style="width: 250px;">
+							<br><br>
+							Delete item by name<br>
+							<input type="text" name="price" style="width: 250px;">
+							<br><br>
+							<button>Commit changes</button>
+						</form>
+						<br>
+						<!-- Display information about success or failure of attempts to modify database -->
+						<div id="mod-msg-info"></div>
+					</div>	
+					<div class="form-reports-admin flex-share">
+						<h3>Item Details</h3>
+						<br><br><div id="found-item-name"></div>
+						<div id="found-item-price"></div>
+						<div id="found-item-qty"></div>
+						<br>
+					</div>
+				</div>				
+			</div>
+		</section>
+
+<%- include('partials/footer.ejs') %>

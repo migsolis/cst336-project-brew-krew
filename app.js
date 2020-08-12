@@ -34,32 +34,43 @@ app.get('/login', (req, res)=> {
     res.render('login');
 });
 
-app.get('/admin', (req, res) => {
-   res.render('admin'); 
-});
-
-// Returns all the items for a category
+// Returns item info array for all items or specific items using filters.
 app.get('/api/getItems', (req, res) => {
-    console.log('Get Items: ',Object.keys(req.query).length, req.query.status, req.query.category);
-    let queryLength = Object.keys(req.query);
+    // console.log('Get Items: ',Object.keys(req.query).length, req.query.status, req.query.category);
+    let queryLength = Object.keys(req.query).length;
     let category = req.query.category;
     let status = req.query.status;
+    let searchTerm = req.query.search;
     let sqlParams = [];
     
-    let sql = 'select item_id, category, items.description, img, description_details, price from items join categories on items.category = category_id';
+    let sql = 'select item_id, category, items.description, img, description_details, price, status from items ' +
+        'join categories on items.category = category_id';
     
-    if(queryLength > 1 || category != 'All'){
+    if(queryLength > 0){
         sql += ' where ';
     }
     
     if(category != undefined && category != 'All'){
-        console.log('category selected: ', category);
+        // console.log('category selected: ', category);
         sql += ' categories.description = ?';
         sqlParams[sqlParams.length] = category;
     }
     
     if(status != undefined){
-        console.log('status: ', status);
+        // console.log('status: ', status);
+        if(queryLength > 1){
+            sql += ' &&';
+        }
+        sql += ' status = ?';
+        sqlParams[sqlParams.length] = status;
+    }
+    
+    if(searchTerm != undefined){
+        // console.log('search: ', searchTerm);
+        searchTerm = '%' + searchTerm + '%';
+        sql += ' items.description like ? || items.description_details like ?';
+        sqlParams[sqlParams.length] = searchTerm;
+        sqlParams[sqlParams.length] = searchTerm;
     }
 
     pool.query(sql, sqlParams, async (err, rows, fields) => {
@@ -70,25 +81,41 @@ app.get('/api/getItems', (req, res) => {
 
 // returns the item-modifiers for an item
 app.get('/api/getItemMods', (req, res) => {
-    let sql = 'select * from modifiers join item_modifiers on modifiers.modifier_group = item_modifiers.modifier_group where item_modifiers.item = ?';
+    let sql = 'select modifier_groups.description as "group_description", modifier_id, modifiers.description, price from modifiers ' +
+        'join item_modifiers on modifiers.modifier_group = item_modifiers.modifier_group ' +
+        'join modifier_groups on modifier_group_id = modifiers.modifier_group ' +
+        'where item_modifiers.item = ? order by price';
     let sqlParams = [req.query.item_id];
     pool.query(sql, sqlParams, (err, rows, fields) => {
         if(err) console.log(err);
+        let modifiers = {};
+            rows.forEach((mod) => {
+                if(modifiers[mod.group_description] == undefined){
+                    modifiers[mod.group_description] = [];
+                }
+                modifiers[mod.group_description].push({'modifier_id': mod.modifier_id, 'description': mod.description});
+                
+            });
         
-        res.send(rows);
+        res.send(modifiers);
     });
 }); // api get item mods
 
 // returns updated price when size or qty change in the order section of an item card.
 app.get('/api/update', (req, res) => {
-    console.log("Update: ", req.query.action, );
+    // console.log("Update: ", req.query.action, req.query.vars);
+    let vars = JSON.parse(req.query.vars);
+    let item_id = vars.item_id;
+    let mod_ids = vars.mods;
+    let qty = vars.qty;
     switch(req.query.action){
         case 'update':
-            let sql = 'select price from menu_items where item_id = ? and modifier_id = ?';
-            let sqlParams = [req.query.item_id, req.query.mod_id];
+            let sql = 'select price from items where item_id = ? union select price from modifiers where modifier_id in (?)';
+            let sqlParams = [item_id, mod_ids];
             pool.query(sql, sqlParams, (err, rows, fields) => {
                 if(err) console.log(err);
-                let price = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(rows[0].price * req.query.qty);
+                let sum = rows.reduce((acc, cur) => {return acc + cur.price}, 0);
+                let price = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(sum * qty);
                 res.send(price);
             });
             break;
@@ -98,8 +125,25 @@ app.get('/api/update', (req, res) => {
     }
 }); // api update
 
-app.get("/admin", isAuthenticated, function(req, res) {
-   res.render("admin"); 
+// Admin panel options
+app.get('/cpanel', isAuthenticated, function(req, res) {
+   res.render("cpanel"); 
+});
+
+app.get("/dcreate", isAuthenticated, function(req, res) {
+   res.render("dcreate"); 
+});
+
+app.get("/dupdate", isAuthenticated, function(req, res) {
+   res.render("dupdate"); 
+});
+
+app.get("/ddelete", isAuthenticated, function(req, res) {
+   res.render("ddelete"); 
+});
+
+app.get("/dreport", isAuthenticated, function(req, res) {
+   res.render("dreport"); 
 });
 
 app.post("/login", async function(req, res){ 
@@ -119,7 +163,12 @@ app.post("/login", async function(req, res){
     
     if (passwordMatch) {
         req.session.authenticated = true;
-        res.render("admin");
+        if(isAdmin(username)) {
+            // cpanel render for admin only
+            res.render("cpanel");    
+        } else {
+            res.redirect("/");
+        }
     } else {
         res.render("login", {"loginError":true});
     }
@@ -154,6 +203,15 @@ function isAuthenticated(req, res, next) {
         next();
     }
 } // isAuthenticated
+
+function isAdmin(username) {
+    // Hardcoded into username, for future should make admin group in DB
+    if (username === 'admin') {
+        return true;
+    } else {
+        return false;
+    }
+} // isAdmin
 
 //listener
 app.listen(process.env.PORT, process.env.IP, ()=> {

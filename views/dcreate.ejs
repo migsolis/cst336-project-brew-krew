@@ -1,0 +1,49 @@
+<%- include('partials/header.ejs') %>
+
+		<section class="login-box">
+			<h2 class="center-txt">Control Panel</h2>
+			<hr>
+			<div class="form-box-admin flex-admin-col">
+				<div class="flex-share"><a href="cpanel"><- Go Back</a></div>
+				<div class="flex-admin">
+					<div style="margin: 0 auto;">
+						<h3>Add an item to the database</h3>
+						<form id="form-db-mod">
+							Item name<br>
+							<input type="text" name="c-itemName" id="c-itemName" style="width: 250px;">
+							<br><br>
+							
+							New item price<br>
+							<input type="text" name="c-itemPrice" style="width: 250px;">
+							<br><br>
+							New item category<br>
+							<select name="c-itemCat" id="c-itemCat">
+								<option value="">Choose category</option>
+								<option value="esBev">Espresso beverage</option>
+								<option value="brCoffee">Brewed coffee</option>
+								<option value="cBrew">Cold brew</option>
+								<option value="hCoffee">Hot coffee</option>
+								<option value="hTea">Hot tea</option>
+								<option value="cTea">Iced tea</option>
+								<option value="cDrink">Cold drink</option>
+								<option value="lunch">Lunch</option>
+								<option value="breakfast">Breakfast</option>
+							</select>
+							<br>
+							<br>
+							<button>Add item</button>
+						</form>
+						<br>
+						<!-- Display information about success or failure of attempts to modify database -->
+						<div id="mod-msg-info"></div>
+					</div>	
+				</div>				
+				
+			</div>
+			
+			
+
+
+		</section>
+
+<%- include('partials/footer.ejs') %>

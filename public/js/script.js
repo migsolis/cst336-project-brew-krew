@@ -10,15 +10,31 @@ $(document).ready(() => {
     }); // category card click event
     
     $('.menu-show-all').on('click', async (ev) => {
-        await generateItemCards({'category': 'All'});
+        await generateItemCards({});
     });
     
-    $('.filter-form input').on('change', async (ev) => {
+    $('.filter-form').on('change', 'input[name="availability"]', async (ev) => {
         // console.log('Availability Selection: ', );
         let category = $(ev.currentTarget).closest('.filter-section').siblings('.displaySelectedCategory').html().trim();
-        let availability = $(ev.currentTarget).val();
+        let availability = ($(ev.currentTarget).val() != -1) ? $(ev.currentTarget).val() : undefined;
         
         await generateItemCards({'category': category, 'status': availability});
+    });
+    
+    $('.filter-form').on('change','select[name="menu-category-select"]', async (ev) => {
+        let category = $(ev.currentTarget).val();
+        // console.log('category: ', category);
+        
+        await generateItemCards({'category': category});
+    });
+    
+    $('#item-search-btn').on('click', async (ev) => {
+        let searchTerm = $(ev.currentTarget).siblings('#item-search-text').val();
+        $('.menu-category-select').val(-1);
+        $('.displaySelectedCategory').html('');
+        // console.log('search: ', searchTerm);
+        
+        await generateItemCards({'search': searchTerm});
     });
     
     // Adds size selection options to item order section
@@ -40,11 +56,17 @@ $(document).ready(() => {
             success: (data, status) => {
                 console.log(data);
                 if(data.length != 0){
-                    let htmlString = `<select class='item-mod-select'>`;
-                    data.forEach((mod, i) => {
-                        htmlString += `<option value='${mod.modifier_id}'>${mod.description}</option>`;
+                    let htmlString = '';
+                    Object.keys(data).forEach((key) => {
+                        console.log('Mod: ', key, data[key]);
+                        htmlString += `<select class='item-mod-select'>`;
+                        
+                        data[key].forEach((mod, i) => {
+                            htmlString += `<option value='${mod.modifier_id}'>${mod.description}</option>`;
+                        });
+                        
+                        htmlString += `</select>`;
                     });
-                    htmlString += `</select>`;
                     $('.modifier-section').html(htmlString);
                 }
             }
@@ -53,7 +75,6 @@ $(document).ready(() => {
     
     // updates price when size is selected
     $('#item-card-container').on('change', '.item-mod-select', async (ev) => {
-        update('update', ev);
         let price = await update('update', ev);
         $(ev.currentTarget).closest('.menu-item-order-section').find('.menu-item-price').html(price);
     }); // size selection event
@@ -62,7 +83,7 @@ $(document).ready(() => {
     $('#item-card-container').on('click', '.menu-item-qty-minus', async (ev) => {
         ev.preventDefault();
         let qtyInput = $(ev.currentTarget).closest('.item-input-group').find('.menu-item-qty');
-        if(qtyInput.val() <= 0){return}
+        if(qtyInput.val() <= 1){return}
         let qty = Number(qtyInput.val()) - 1;
         qtyInput.val(qty);
         let price = await update('update', ev);
@@ -109,12 +130,17 @@ $(document).ready(() => {
                 url: '/api/getItems',
                 data: {
                     'category': data.category,
-                    'status': data.status
+                    'status': data.status,
+                    'search': data.search
                 },
                 success: (data, status) => {
                     $('.displaySelectedCategory').html(data.displayedCategory);
                     $('#item-card-container').html('');
-                    console.log(data);
+                    // console.log('Gen Item Cards:', data);
+                    
+                    if(data.items.length == 0){
+                        $('#item-card-container').html('Sorry, no items meet these criteria. Try something new!')
+                    };
                     
                     data.items.forEach( (item, i) => {
                         let price = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(item.price);
@@ -127,13 +153,15 @@ $(document).ready(() => {
                                 <div class='menu-item-card-body'>
                                     <div class='menu-item-title'>${item.description}</div>
                                     <div class='menu-item-desc'>${item.description_details}</div>`;
-                        if(true){
+                        if(item.status == 1){
                             htmlString += `<button class='menu-item-order-btn'>ORDER</button>`;
+                        } else if (item.status == 2) {
+                            htmlString += `<div class='menu-item-unavailable'>Out of Stock</div>`;
                         } else {
-                            htmlString += `<div class='menu-item-unavailable'>This Item is Unavailable</div>`
+                            htmlString += `<div class='menu-item-unavailable'>Unavailable</div>`;
                         }
                         htmlString +=  `<!-- card order section -->
-                                    <div class='menu-item-order-section' action="/addToCart">
+                                    <div class='menu-item-order-section'>
                                         <div class='modifier-section'></div>
                                         <div class='item-input-group'>
                                             <div class='item-input-group-prepend'><button class='btn btn-default menu-item-qty-minus'>-</button> </div>
@@ -156,18 +184,25 @@ $(document).ready(() => {
     // update price and cart function
     function update(action, ev){
         return new Promise((resolve, reject) => {
-            let item_id = $(ev.currentTarget).closest('.menu-item-order-section').find('.menu-item-id').val();
-            let mod_id = $(ev.currentTarget).closest('.menu-item-order-section').find('.item-mod-select').val();
-            let qty = $(ev.currentTarget).closest('.menu-item-order-section').find('.menu-item-qty').val();
+            let item_id = Number($(ev.currentTarget).closest('.menu-item-order-section').find('.menu-item-id').val());
+            let qty = Number($(ev.currentTarget).closest('.menu-item-order-section').find('.menu-item-qty').val());
+            let mod_ids = [];
             
+            $(ev.currentTarget).closest('.menu-item-order-section').find('.item-mod-select').each((i, mod) => {
+                // console.log('mods: ', i, $(mod).val());
+                mod_ids.push(Number($(mod).val()));
+            });
+            
+            let vars = {'item_id': item_id, 'qty': qty, 'mods': mod_ids};
+            console.log(vars);
+            let varsString = JSON.stringify(vars);
+            console.log(varsString);
             $.ajax({
                 method: 'get',
                 url: '/api/update',
                 data: {
                     'action': action,
-                    'item_id': item_id,
-                    'mod_id': mod_id,
-                    'qty': qty
+                    'vars': varsString
                 },
                 success: (data, status) => {
                     resolve(data);
