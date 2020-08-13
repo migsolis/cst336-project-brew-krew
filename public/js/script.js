@@ -6,16 +6,21 @@ $(document).ready(() => {
     // for the selected category.
     $('.menu-category-card').on('click', async (ev) => {
         let category = $(ev.currentTarget).find('.menu-category-desc').html().trim();
+        $('.menu-category-select').val(-1);
+        $('#item-search-text').val('');
         await generateItemCards({'type': 2, 'category': category});
     }); // category card click event
     
     $('.menu-show-all').on('click', async (ev) => {
+        $('.menu-category-select').val(-1);
+        $('.displaySelectedCategory').html('');
         await generateItemCards({});
     });
     
     $('.filter-form').on('change', 'input[name="availability"]', async (ev) => {
         // console.log('Availability Selection: ', );
         let category = $(ev.currentTarget).closest('.filter-section').siblings('.displaySelectedCategory').html().trim();
+        
         let availability = ($(ev.currentTarget).val() != -1) ? $(ev.currentTarget).val() : undefined;
         
         await generateItemCards({'category': category, 'status': availability});
@@ -28,7 +33,7 @@ $(document).ready(() => {
         await generateItemCards({'category': category});
     });
     
-    $('#item-search-btn').on('click', async (ev) => {
+    $('.filter-form').on('click', '#item-search-btn', async (ev) => {
         let searchTerm = $(ev.currentTarget).siblings('#item-search-text').val();
         $('.menu-category-select').val(-1);
         $('.displaySelectedCategory').html('');
@@ -54,11 +59,9 @@ $(document).ready(() => {
                 'item_id': id
             },
             success: (data, status) => {
-                console.log(data);
                 if(data.length != 0){
                     let htmlString = '';
                     Object.keys(data).forEach((key) => {
-                        console.log('Mod: ', key, data[key]);
                         htmlString += `<select class='item-mod-select'>`;
                         
                         data[key].forEach((mod, i) => {
@@ -113,14 +116,14 @@ $(document).ready(() => {
     }); // plus button click event
     
     // Adds an items to cart
-    $('#item-card-container').on('click', '.menu-item-add-btn', (ev) => {
+    $('#item-card-container').on('click', '.menu-item-add-btn', async (ev) => {
         ev.preventDefault();
         $('.menu-item-order-btn').show();
         $('.menu-item-desc').show();
         $('.menu-item-order-section').hide();
+        await update('add', ev);
         $(ev.currentTarget).siblings('.item-input-group').find('.menu-item-qty').val(1);
         $(ev.currentTarget).siblings('.item-mod-select').val(1);
-        update('add', ev);
     }); // add to cart click event
     
     function generateItemCards(data){
@@ -189,20 +192,23 @@ $(document).ready(() => {
             let mod_ids = [];
             
             $(ev.currentTarget).closest('.menu-item-order-section').find('.item-mod-select').each((i, mod) => {
-                // console.log('mods: ', i, $(mod).val());
                 mod_ids.push(Number($(mod).val()));
             });
             
-            let vars = {'item_id': item_id, 'qty': qty, 'mods': mod_ids};
-            console.log(vars);
-            let varsString = JSON.stringify(vars);
-            console.log(varsString);
+            let data = {'item_id': item_id, 'qty': qty, 'mods': mod_ids};
+            let dataString = JSON.stringify(data);
+            
+            let url = '/api/update';
+            
+            if (action == 'add'){
+                url = '/api/cart/additem';
+            } 
+            
             $.ajax({
                 method: 'get',
-                url: '/api/update',
+                url: url,
                 data: {
-                    'action': action,
-                    'vars': varsString
+                    'data': dataString
                 },
                 success: (data, status) => {
                     resolve(data);
@@ -212,3 +218,91 @@ $(document).ready(() => {
     } // update function
     
 });
+
+//update prices
+//$(document).ready(() => {
+	$("#form-db-mod").submit(function(e) { 
+       e.preventDefault();
+        
+        console.log("clciko");
+        let id = $('#item_id').val();
+        let price=$('#item_price').val();
+        $.ajax({
+                method: 'get',
+                url: '/api/updateprice',
+                data: {
+                    'action': "update",
+                    'item_id': item_id,
+                    'price': price
+                   
+                },
+                success: (data, status) => {
+                    $('#c-item_id').val("");
+                    $('#c-price').val("");
+                }
+            }); // end of updating api call
+             return false; 
+     	});
+	
+//	});
+
+// insert items to the db 
+$(document).ready(() => {
+  	$("#form-db-mod-add").submit(function(e) {
+	    e.preventDefault();
+
+        const description = $('#c-itemName').val();
+        const category = $('#c-itemCat').val();
+        const price = $('#c-itemPrice').val();
+        $.ajax({
+            method: 'get',
+            url: '/api/insertitems',
+            data: {
+                'action': "insert",
+                'description': description,
+                'category': category,
+                'price': price
+            },
+            success: (data, status) => {
+                $('#c-itemName').val("");
+                $('#c-itemCat').val("");
+                $('#c-itemPrice').val("");
+            }
+        }); // end of the ajax call 
+        return false;
+    }); 
+});
+
+ $("#form-generatereports").submit(function(e) { 
+        // write click event here
+        alert("hello");
+        e.preventDefault();
+        let startdate = $("#r-start-date").val();
+        let enddate=$("#r-end-date").val();
+        let sorder= $("#s-order").val();
+        console.log(startdate);
+        console.log(enddate);
+        console.log(sorder);
+        switch(sorder){
+            case "open" :
+                
+                $.ajax({
+                method: 'get',
+                url: '/api/getOpenOrders',
+                data: {
+                    
+                    'sdate': startdate,
+                    'enddate': enddate
+                   
+                   
+                },
+                success: (data, status) => {;
+                    console.log(data);
+                    resolve(data);
+                }
+            }); // size modifier ajax call
+                break;
+        }
+        
+    });
+    

@@ -8,24 +8,25 @@
 				<div class="flex-admin">
 					<div class="flex-share" style="width: 50%;">
 						<h3>Delete item from database</h3>
-						<form id="form-db-mod">
+						
 							Delete item by ID<br>
 							<input type="text" name="del-item" id="del-item" style="width: 250px;">
+							<br>
+							<!-- Display information about success or failure of attempts to modify database -->
+							<div id="del-msg-info"></div>
+							<br>
+							<!-- Delete item by name<br>
+							<input type="text" name="del-it-name" id="del-it-name" style="width: 250px;">
+							-->
 							<br><br>
-							Delete item by name<br>
-							<input type="text" name="price" style="width: 250px;">
-							<br><br>
-							<button>Commit changes</button>
-						</form>
+							<button class="delete_items" id="delete_items">Commit changes</button>
+						
 						<br>
-						<!-- Display information about success or failure of attempts to modify database -->
-						<div id="mod-msg-info"></div>
 					</div>	
 					<div class="form-reports-admin flex-share">
 						<h3>Item Details</h3>
-						<br><br><div id="found-item-name"></div>
-						<div id="found-item-price"></div>
-						<div id="found-item-qty"></div>
+						<br><br><div id="d-item-name"></div>
+						<div id="d-item-price"></div>
 						<br>
 					</div>
 				</div>				

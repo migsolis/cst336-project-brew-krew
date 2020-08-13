@@ -98,13 +98,13 @@ hr {
 }
 
 .navbar {
-  border: none;
-  box-shadow: none;
+  	border: none;
+  	box-shadow: none;
+  
 }
 
 .nv-head {
 	background-color: #f0ece2;
-	height: 128px;
 	padding-top: 64px;
 }
 
@@ -240,6 +240,7 @@ hr {
 .menu-item-unavailable {
 	color: red;
 	font-weight: bold;
+	margin: 10px;
 }
 
 .menu-item-order-btn {

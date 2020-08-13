@@ -8,21 +8,21 @@
 				<div class="flex-admin">
 					<div class="flex-share" style="width: 50%;">
 						<h3>Modify the database</h3>
-						<form id="form-db-mod">
+					<!--	<form id="form-db-mod"> -->
 							Select item by ID<br>
-							<input type="text" name="uname" id="sel-id" style="width: 250px;">
+							<input type="text" name="item_id" id="item_id" style="width: 250px;">
 							<br><br><div id="found-item-name"></div>
 							<div id="found-item-price"></div>
 							<div id="found-item-qty"></div>
 							<br><br>
 							
 							Update item price<br>
-							<input type="text" name="price" style="width: 250px;">
+							<input type="text" name="price" id="item_price" style="width: 250px;">
 							<br><br>
-							Update item stock<br>
+						  <!--  Update item stock<br>
 							<input type="text" name="stock" style="width: 250px;">
-							<br><br>
-							<button>Commit changes</button>
+							<br><br> -->
+							<button class="commitprice" id="commitprice">Commit changes</button>
 						</form>
 						<br>
 						<!-- Display information about success or failure of attempts to modify database -->
@@ -31,6 +31,9 @@
 					<div class="form-reports-admin flex-share">
 						<h3>Item Details</h3>
 						<br>
+						<div id="g_itemName"></div>
+						<br>
+						<div id="g_itemPrice"></div>
 					</div>
 				</div>				
 				

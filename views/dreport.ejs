@@ -9,25 +9,26 @@
 					<div class="flex-share">
 						<h3>Generate reports</h3>
 						<br>
-						Report start date:<br>
-						<input type="date" name="r-start-date"><br><br>
-						Report end date:<br>
-						<input type="date" name="r-end-date"><br><br>
-						
-						<label for="s-order">Report type:</label>
+						<label for="s_order">Report type:</label>
 						<br>
-						<select name="order-type" id="s-order">
+						<select name="order-type" id="s_order">
 							<option value="">Choose an option</option>
 							<option value="open">Open orders</option>
-							<option value="Recent">Recent sales</option>
+							<option value="recent">Recent sales</option>
 							<option value="inventory">Current inventory</option>	
 						</select>
+						<br><br>
+						<div id="date_options">
+							Report start date:<br>
+							<input type="date" name="r-start-date" id="r-start-date"><br><br>
+							Report end date:<br>
+							<input type="date" name="r-end-date" id="r-end-date"><br><br>							
+						</div>						
+						<button class="generatereports" id="generatereports">Generate Report</button>
+					
 						<br><br><br>
-						<button>Generate report</button>
-						</form>
-						<br>
 						<!-- Display information about success or failure of attempts to modify database -->
-						<div id="mod-msg-info"></div>
+						<div class="modifier-section"></div>
 					</div>	
 
 				</div>				

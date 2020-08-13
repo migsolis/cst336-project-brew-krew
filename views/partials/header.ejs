@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="css/app.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script src="js/script.js"></script>
 	<script src="js/chris.js"></script>
 	
@@ -32,13 +33,14 @@
 					<ul class="nav navbar-nav">
 						<li><a class="header-nav-spacer" href="/">Home</a></li>
 						<li><a class="header-nav-spacer" href="/menu">Menu</a></li>
-						<li><a class="header-nav-spacer" href="#">Shop</a></li>
-						<li><a class="header-nav-spacer" href="#">About</a></li>
+						<!--<li><a class="header-nav-spacer" href="#">Shop</a></li>-->
+						<!--<li><a class="header-nav-spacer" href="#">About</a></li>-->
 					</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Cart  <em class="fa fa-cart-plus"></em></a></li>
-					<li><a href="/login">Sign In <em class="fa fa-user"></em></a></li>
+					<li><a href="/cart">Cart  <em class="fa fa-cart-plus"></em></a></li>
+					<li class='login'><a href="/login">Sign In <em class="fa fa-user"></em></a></li>
+					<li class='logout' style='display: none'><a href="/logout">Sign Out</a></li>
 				</ul>
 			  </div>
 			</div>

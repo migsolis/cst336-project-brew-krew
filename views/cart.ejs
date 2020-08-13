@@ -1,0 +1,180 @@
+<%- include('partials/header.ejs') %>
+        <style>
+            div {
+                padding: 25px;
+            }
+            
+            a {
+              color: black;
+              text-decoration: none;
+            }
+
+            a:visited {
+              color: black;
+              text-decoration: none;
+            }
+            
+            a:hover {
+              color: brown;
+              text-decoration: none;
+            }
+            
+            a:active {
+              color: black;
+              text-decoration: none;
+            }
+            
+            .table-borderless td,
+            .table-borderless th {
+                border: 0;
+                
+            }
+        </style>
+    <body>
+        <main>
+            <div class="container">
+                <div class="row-lg justify-content-lg-center">
+                    <div class="col col-lg-10">
+                        <h3> Shopping Cart </h3>
+                    </div>
+                </div>
+                <div class="row-lg justify-content-lg-center">
+                    <div id="shoppingCart" class="col-lg-10">
+                    </div>
+                </div>
+                <div class="row">
+                    <div id ="customerInformation" class="col-sm-3" hidden>
+                        <fieldset>
+                            <label for="nameFirst">First Name: </label>
+                            <input type="text" name="nameFirst" id="nameFirst" class="form-control"/>
+                            <label for="nameLast">Last Name: </label>
+                            <input type="text" name="nameLast" id="nameLast" class="form-control"/>
+                            <label for="email">Email: </label>
+                            <input type="text" name="email" id="email" class="form-control"/>
+                            <label for="location">Pick up location: </label>
+                            <select id="location" name="location" class="form-control"></select>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div id ="priceSummary" class="col-sm-3" hidden>
+                        <br/>
+                        <h5>Subtotal: $<span id='subtotalPrice'>0.00</span></h5>
+                        <h5>Tax: $<span id='taxPrice'>0.00</span></h5>
+                        <hr/>
+                        <h4>Total: $<span id='totalPrice'>0.00</span></h4>
+                        <br/>
+                        <a href='' class='btn btn-warning'>Place Order</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script>
+            $(document).ready(function() {
+                  function getCart() {
+                    $.ajax({
+                        method: "get",
+                        url: "/api/cart/getcart",
+                        data: {
+                            //"orderId": orderId
+                        },
+                        success: function(data, status) {
+                            let htmlCart = "";
+                            let subtotalPrice = 0.00;
+                            if(!data.length){
+                                htmlCart = "<h4>Your Shopping Cart is empty<h4>"
+                                $("#customerInformation").hide();
+                                $("#priceSummary").hide();
+                            } else {
+                                htmlCart += "<table class='table'>";
+                                htmlCart += "<tbody>";
+                                data.forEach(function(row){
+                                    htmlCart += "<tr>";
+                                    htmlCart += `    <td><img src='img/${row.img}' width='100' height='100'/></td>`;
+                                    htmlCart += `    <td>`;
+                                    htmlCart += `       <h6>${row.description}</h6>`;
+                                    if(row.item_mods.length > 0){
+                                        row.item_mods.forEach(function(modRow, i){
+                                            htmlCart += `       <table class="table-borderless">`;
+                                            htmlCart += `           <tr>`;
+                                            htmlCart += `               <td>${modRow.description}`;
+                                            htmlCart += `           </tr>`;
+                                            htmlCart += `       </table>`;        
+                                        });
+                                    }
+                                    htmlCart += `   </td>`;
+                                    htmlCart += `    <td><input type='number' min='1' max='99' value="${row.qty}" disabled/></td>`;
+                                    htmlCart += `    <td>$${row.total_price.toFixed(2)}</td>`;
+                                    htmlCart += `    <td><h5><a href='' class='deleteLine'  data-orderline='${row.order_line}'>X</a></h5></td>`;
+                                    htmlCart += "</tr>";
+                                    
+                                    subtotalPrice += row.total_price;
+                                });
+                                htmlCart += "</tbody>";
+                                htmlCart += "</table>";
+                            }
+                            
+                            $("#subtotalPrice").text(subtotalPrice.toFixed(2).toString());
+                            $("#shoppingCart").html(htmlCart);
+                            $("#customerInformation").removeAttr('hidden');
+                            $("#priceSummary").removeAttr('hidden');
+                            
+                            calculatePrice();
+                        }
+                    }); //ajax
+                } //getCart
+                
+                function getLocations(){
+                    $.ajax({
+                        method: "GET",
+                           url: "/api/cart/locations",
+                      dataType: "json",
+                          data: {},                
+                       success: function(result, status) {
+                           
+                           $("#location").html("<option> Select One </option>");
+                           for(let i=0; i < result.length; i++){
+                               $("#location").append('<option value="' + result[i].location_id+ '" data-taxrate='+result[i].tax_rate+'> ' + result[i].city + '</option>');
+                           }
+                       }
+                    });//ajax
+                };//getLocations
+                
+                function calculatePrice(){
+                    let subtotalPrice = 0.00;
+                    let taxPrice = 0.00;
+                    let totalPrice = 0.00;
+                    
+                    subtotalPrice = parseFloat($("#subtotalPrice").text());
+                    taxPrice = parseFloat($("#location option:selected").attr("data-taxrate")) * subtotalPrice;
+                    if(isNaN(taxPrice)) taxPrice = 0.00;
+                    totalPrice = subtotalPrice + taxPrice;
+                    
+                    $("#taxPrice").text(taxPrice.toFixed(2).toString());
+                    $("#totalPrice").text(totalPrice.toFixed(2).toString());
+                }
+                
+                 $("#location").on("change", function(){
+                     
+                     calculatePrice();
+                
+                });//location
+                
+                $("#shoppingCart").on("click", ".deleteLine", function(){
+                    let orderLine = $(this).attr("data-orderline");
+                     $.ajax({
+                        method: "get",
+                        url: "/api/cart/deleteitem",
+                        data: {
+                            "orderline": orderLine
+                        },
+                        success: function(data, status) {
+                        }
+                    }); //ajax
+                });
+                
+                getCart();
+                getLocations();
+            }); //ready
+        </script>
+<%- include('partials/footer.ejs') %>

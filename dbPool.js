@@ -5,7 +5,8 @@ const pool = sql.createPool({
     host: 'db.bienz.us',
     user: 'brewkrewdb',
     password: 'Th3B3stCoff33!',
-    database: 'brewkrew'
+    database: 'brewkrew',
+    multipleStatements: true
 });
 
 module.exports = pool;
