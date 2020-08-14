@@ -116,6 +116,7 @@ $(document).ready(() => {
     $('#item-card-container').on('click', '.menu-item-qty-plus', async (ev) => {
         ev.preventDefault();
         let qtyInput = $(ev.currentTarget).closest('.item-input-group').find('.menu-item-qty');
+        if(qtyInput.val() >= 15){return}
         let qty = Number(qtyInput.val()) + 1;
         qtyInput.val(qty);
         let price = await update('update', ev);
@@ -129,6 +130,9 @@ $(document).ready(() => {
         let qty = Number(qtyInput.val());
         if(qty <= 0){
             qtyInput.val(1);
+        }
+        if(qty > 15){
+            qtyInput.val(15);
         }
         let price = await update('update', ev);
         $(ev.currentTarget).closest('.menu-item-order-section').find('.menu-item-price').html(price);
@@ -187,7 +191,7 @@ $(document).ready(() => {
                                         <div class='modifier-section'></div>
                                         <div class='item-input-group'>
                                             <div class='item-input-group-prepend'><button class='btn btn-default menu-item-qty-minus'>-</button> </div>
-                                            <input class='form-control menu-item-qty' type='number' min='1' value='1'>
+                                            <input class='form-control menu-item-qty' type='number' min='1' max='15' value='1'>
                                             <div class='item-input-group-append'><button class='btn btn-default menu-item-qty-plus'>+</button></div>
                                         </div>
                                         <div class='menu-item-price'>${price}</div>
