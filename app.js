@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 });
 
 app.get("/cart", async function (req, res) {
-    res.render("cart");
+        res.render("cart");
 });
 
 app.get('/menu', (req, res) => {
@@ -150,7 +150,6 @@ app.get('/api/getItemInfo', (req, res) => {
 
 // api add new entry 
 app.get('/api/insertitems', (req, res) => {
-    console.log("insert: ", req.query.action, );
     switch(req.query.action){
         case 'insert':
             const sql = `INSERT INTO items (category, description, price) VALUES (?, ?, ?)`;
@@ -340,6 +339,30 @@ app.get("/api/cart/locations", async function(req, res){
     });
 });
 
+app.post("/submitorder", async function (req, res) {
+    if(req.session.orderid) {
+        let orderId = req.session.orderid;
+        let orderLocation =  req.body.location;
+        let orderTotal = req.body.total;
+        let sql = "UPDATE orders SET status = ?, location = ?, name_first = ?, name_last = ?, email = ?, subtotal = ?, tax = ?, total = ?, order_date = ? WHERE order_id = ?";
+        let sqlParams = [2, req.body.location, req.body.name_first, req.body.name_last,
+        req.body.email, req.body.subtotal, req.body.tax, req.body.total, 
+        dateFormat(Date.now(), "yyyy-mm-dd"), req.session.orderid];
+        return new Promise (function (resolve, reject) {
+            pool.query(sql, sqlParams, function (err, rows, fields) {
+                if (err) throw err;
+                req.session.destroy();
+                res.render("confirmation", {"orderId": orderId, "location": orderLocation, "orderTotal": orderTotal}); 
+            });
+        });
+    }
+    res.redirect("cart");
+});
+
+app.get("/submitorder", async function (req, res) {
+    res.redirect("cart");
+});
+
 // Admin panel options
 app.get('/cpanel', isAuthenticated, function(req, res) {
    res.render("cpanel"); 
@@ -368,8 +391,6 @@ app.post("/login", async function(req, res){
     let result = await checkUsername(username);
     let hashedPwd = "";
     
-    console.log(username);
-    
     if (result.length > 0) {
         hashedPwd = result[0].password;
     }
@@ -395,8 +416,12 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-// functions
+app.get('/isAuthenticated', (req, res) => {
+    res.send({"isAuthenticated": req.session.authenticated});
+});
 
+
+// functions
 function checkUsername(username) {
     let sql = "SELECT * FROM users WHERE username = ?";
     return new Promise(function(resolve, reject) {
@@ -408,7 +433,6 @@ function checkUsername(username) {
 }
 
 function checkPassword(password, hashedVal) {
-    console.log(password + " : " + hashedVal);
     return new Promise(function(resolve, reject) {
        bcrypt.compare(password, hashedVal, function(err, result) {
           if (err) throw err;

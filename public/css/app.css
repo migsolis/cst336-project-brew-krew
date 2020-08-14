@@ -1,5 +1,11 @@
+html, body {
+	height: 100%;
+}
+
 body {
 	background-color: #f0ece2;
+	display: flex;
+    flex-direction: column;
 }
 
 a:link {
@@ -15,11 +21,14 @@ a:hover {
 }
 
 .bc-footer {
+	flex-shrink: 0;
 	background-color: #c7b198;
-	bottom: 0;
 	height: 125px;
-	padding-top: 24px;
 	width: 100vw;
+}
+
+.site-content {
+	flex: 1 0 auto;	
 }
 
 .center-txt {
@@ -56,7 +65,7 @@ a:hover {
 .form-box-admin {
 	background-color: white;
 	padding: 22px;
-	width: 700px;
+	width: 800px;
 	margin: 0 auto;
 }
 
@@ -78,6 +87,10 @@ hr {
     background: #333;
     background-image: linear-gradient(to right, #ccc, #333, #ccc);
 	margin-bottom: 18px;
+}
+
+.cart{
+	width: 15vw;
 }
 
 .header-nav-spacer {

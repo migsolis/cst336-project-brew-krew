@@ -8,14 +8,16 @@
 				<div class="flex-admin">
 					<div style="margin: 0 auto;">
 						<h3>Add an item to the database</h3>
-						<form id="form-db-mod-add" action="">
+						
 							Item name<br>
 							<input type="text" name="c-itemName" id="c-itemName" style="width: 250px;">
 							<br><br>
 							
 							New item price<br>
-							<input type="text" name="c-itemPrice"  id="c-itemPrice"style="width: 250px;">
-							<br><br>
+							<input type="text" name="c-itemPrice"  id="c-itemPrice"style="width: 250px;" placeholder="0.00" pattern="^\d*(\.\d{0,2})?$">
+							<br>
+							<div id="a-itemPrice"></div>
+							<br>
 							New item category<br>
 							<select name="c-itemCat" id="c-itemCat">
 								<option value="">Choose category</option>
@@ -30,13 +32,13 @@
 								<option value="9">Breakfast</option>
 							</select>
 							<br>
+							<!-- Display information about success or failure of attempts to modify database -->
+							<div id="add-msg-info"></div>
 							<br>
 							<!--<button>Add item</button>-->
 							<button type="submit" class="insertitems" id="insertitems">Add Item</button>
-						</form>
+						
 						<br>
-						<!-- Display information about success or failure of attempts to modify database -->
-						<div id="mod-msg-info"></div>
 					</div>	
 				</div>				
 				

@@ -10,15 +10,16 @@
 						<h3>Modify the database</h3>
 					<!--	<form id="form-db-mod"> -->
 							Select item by ID<br>
-							<input type="text" name="item_id" id="item_id" style="width: 250px;">
-							<br><br><div id="found-item-name"></div>
-							<div id="found-item-price"></div>
-							<div id="found-item-qty"></div>
-							<br><br>
-							
+							<input type="text" name="item_id" id="item_id" style="width: 250px;" value="1">
+							<br>
+							<div id="f-item-msg"></div>
+							<br>
+							<br>
 							Update item price<br>
-							<input type="text" name="price" id="item_price" style="width: 250px;">
-							<br><br>
+							<input type="text" name="price" id="item_price" style="width: 250px;" placeholder="0.00" pattern="^\d*(\.\d{0,2})?$">
+							<br>
+							<div id="it-price-msg"></div>
+							<br>
 						  <!--  Update item stock<br>
 							<input type="text" name="stock" style="width: 250px;">
 							<br><br> -->

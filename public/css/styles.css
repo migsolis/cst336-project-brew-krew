@@ -1,5 +1,7 @@
 body {
-    background-color: #f0ece2;
+
+    display: flex;
+    flex-direction: column;
 }
 
 /*Menu styles*/
@@ -9,6 +11,7 @@ body {
 	flex-wrap: wrap;
 	justify-content: center;
 }
+
 .menu-category-card {
     display: flex;
     flex-direction: row;

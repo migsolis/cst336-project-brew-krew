@@ -2,6 +2,25 @@
 
 $(document).ready(() => {
     
+    $.ajax({
+        method: 'get',
+        url: '/isAuthenticated',
+        success: (data, status) => {
+            console.log("Authenicated: ", data.isAuthenticated);
+            
+            //if(typeof(data.isAuthenticated) == undefined || data.isAuthenticated == false){
+            if(!data.isAuthenticated || data.isAuthenticated == false){
+                //$('.login').html('<a href="/login">Sign In <em class="fa fa-user"></em></a>');
+                $('#loginLink').html('<a href="/login">Sign In <em class="fa fa-user"></em></a>');
+                $('#adminLink').html('');
+            }else{
+                //$('.login').html('<a href="/logout">Sign Out <em class="fa fa-user"></em></a>');
+                $('#loginLink').html('<a href="/logout">Sign Out <em class="fa fa-user"></em></a>');
+                $('#adminLink').html('<a href="/cpanel">Control Panel <em class="fa fa-toolbox"></em></a');
+            }
+        }
+    });
+    
     // When category card is pressed it does an ajax get and generates item cards
     // for the selected category.
     $('.menu-category-card').on('click', async (ev) => {
@@ -305,4 +324,92 @@ $(document).ready(() => {
         }
         
     });
+    
+  function cartGetCart() {
+    $.ajax({
+        method: "get",
+        url: "/api/cart/getcart",
+        data: {
+            //"orderId": orderId
+        },
+        success: function(data, status) {
+            let htmlCart = "";
+            let subtotalPrice = 0.00;
+            if(!data.length){
+                htmlCart = "<h4>Your Shopping Cart is empty<h4>"
+                $("#customerInformation").hide();
+                $("#priceSummary").hide();
+            } else {
+                htmlCart += "<table class='table'>";
+                htmlCart += "<tbody>";
+                data.forEach(function(row){
+                    htmlCart += "<tr>";
+                    htmlCart += `    <td><img src='img/${row.img}' width='100' height='100'/></td>`;
+                    htmlCart += `    <td>`;
+                    htmlCart += `       <h6>${row.description}</h6>`;
+                    if(row.item_mods.length > 0){
+                        row.item_mods.forEach(function(modRow, i){
+                            htmlCart += `       <table class="table-borderless">`;
+                            htmlCart += `           <tr>`;
+                            htmlCart += `               <td>${modRow.description}`;
+                            htmlCart += `           </tr>`;
+                            htmlCart += `       </table>`;        
+                        });
+                    }
+                    htmlCart += `   </td>`;
+                    htmlCart += `    <td><input type='number' min='1' max='99' value="${row.qty}" disabled/></td>`;
+                    htmlCart += `    <td>$${row.total_price.toFixed(2)}</td>`;
+                    htmlCart += `    <td><h5><a href='' class='deleteLine'  data-orderline='${row.order_line}'>X</a></h5></td>`;
+                    htmlCart += "</tr>";
+                    
+                    subtotalPrice += row.total_price;
+                });
+                htmlCart += "</tbody>";
+                htmlCart += "</table>";
+            }
+            
+            $("#subtotalPrice").text(subtotalPrice.toFixed(2).toString());
+            $("#formSubtotal").val(subtotalPrice.toFixed(2).toString());
+            $("#shoppingCart").html(htmlCart);
+            $("#customerInformation").removeAttr('hidden');
+            $("#priceSummary").removeAttr('hidden');
+            
+            cartCalculatePrice();
+        }
+    }); //ajax
+} //getCart
+
+function cartCalculatePrice(){
+    let subtotalPrice = 0.00;
+    let taxPrice = 0.00;
+    let totalPrice = 0.00;
+    
+    subtotalPrice = parseFloat($("#subtotalPrice").text());
+    taxPrice = parseFloat($("#location option:selected").attr("data-taxrate")) * subtotalPrice;
+    if(isNaN(taxPrice)) taxPrice = 0.00;
+    totalPrice = subtotalPrice + taxPrice;
+    
+    $("#taxPrice").text(taxPrice.toFixed(2).toString());
+    $("#formTax").val(taxPrice.toFixed(2).toString());
+    $("#totalPrice").text(totalPrice.toFixed(2).toString());
+    $("#formTotal").val(totalPrice.toFixed(2).toString());
+    
+}//cartCalculatePrice
+
+function cartGetLocations(){
+    $.ajax({
+        method: "GET",
+           url: "/api/cart/locations",
+      dataType: "json",
+          data: {},                
+       success: function(result, status) {
+           
+           $("#location").html("<option value='0'> Select One </option>");
+           for(let i=0; i < result.length; i++){
+               $("#location").append('<option value="' + result[i].location_id+ '" data-taxrate='+result[i].tax_rate+'> ' + result[i].city + '</option>');
+           }
+       }
+    });//ajax
+};//getLocations
+
     
